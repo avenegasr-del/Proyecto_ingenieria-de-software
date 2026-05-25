@@ -1,0 +1,84 @@
+{
+  "folders": [
+    { "path": ".", "name": "🗂 Travel Planner (Root)" },
+    { "path": "airport-service", "name": "✈️ Airport Service" },
+    { "path": "itinerary-service", "name": "📋 Itinerary Service" },
+    { "path": "frontend", "name": "🌐 Frontend" },
+    { "path": "load-tests", "name": "🏋️ Load Tests" }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "python",
+    "editor.formatOnSave": true,
+    "editor.rulers": [88],
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+      "**/.pytest_cache": true
+    }
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "🚀 Run All Services (Docker)",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder:🗂 Travel Planner (Root)}/run.py",
+        "args": ["docker"],
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "🐍 Run All Services (Local)",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder:🗂 Travel Planner (Root)}/run.py",
+        "args": ["local"],
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "🧪 Run All Tests",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder:🗂 Travel Planner (Root)}/run.py",
+        "args": ["test"],
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "✈️ Airport Service only",
+        "type": "python",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["app.main:app", "--reload", "--port", "8001"],
+        "cwd": "${workspaceFolder:✈️ Airport Service}",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder:✈️ Airport Service}",
+          "API_COLOMBIA_URL": "https://api-colombia.com/api/v1"
+        },
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "📋 Itinerary Service only",
+        "type": "python",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["app.main:app", "--reload", "--port", "8002"],
+        "cwd": "${workspaceFolder:📋 Itinerary Service}",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder:📋 Itinerary Service}",
+          "AIRPORT_SERVICE_URL": "http://localhost:8001",
+          "DATABASE_URL": "sqlite:///./itineraries.db"
+        },
+        "console": "integratedTerminal"
+      }
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "ms-azuretools.vscode-docker",
+      "42crunch.vscode-openapi",
+      "njpwerner.autodocstring"
+    ]
+  }
+}

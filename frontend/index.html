@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Planner — Sistema de Itinerarios</title>
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>✈️ Travel Planner</h1>
+    <p>Sistema de Planificación de Viajes — Arquitectura de Microservicios</p>
+  </div>
+  <span class="badge">Hexagonal Architecture</span>
+</header>
+
+<main>
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span id="status-airport">
+      <span class="status-dot dot-grey"></span>
+      Airport Service: <span class="status-text">verificando…</span>
+    </span>
+    <span id="status-itinerary">
+      <span class="status-dot dot-grey"></span>
+      Itinerary Service: <span class="status-text">verificando…</span>
+    </span>
+    <span id="airport-count" style="color:#2e75b6;font-weight:600"></span>
+  </div>
+
+  <!-- Map -->
+  <div class="top-bar">
+    <h2>🗺️ Aeropuertos Colombianos</h2>
+    <div class="controls">
+      <button class="btn-secondary" onclick="renderMap()">🔄 Recargar mapa</button>
+    </div>
+  </div>
+
+  <div id="map-wrapper">
+    <div id="airport-map"></div>
+  </div>
+
+  <!-- Panels -->
+  <div class="panel-grid">
+
+    <!-- Create itinerary form -->
+    <div class="panel">
+      <h3>➕ Crear Itinerario</h3>
+      <form id="itinerary-form">
+        <div class="form-group">
+          <label>Nombre del viajero</label>
+          <input id="user-name" type="text" placeholder="Ej: María García" required>
+        </div>
+        <div class="form-group">
+          <label>Aeropuerto de salida</label>
+          <select id="dep-airport" required>
+            <option value="">Cargando aeropuertos…</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Aeropuerto de llegada</label>
+          <select id="arr-airport" required>
+            <option value="">Cargando aeropuertos…</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fecha de viaje</label>
+            <input id="travel-date" type="date" required>
+          </div>
+          <div class="form-group">
+            <label>Duración (minutos)</label>
+            <input id="duration" type="number" min="1" placeholder="90" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;margin-top:6px">
+          ✈️ Guardar Itinerario
+        </button>
+        <div id="form-message"></div>
+      </form>
+    </div>
+
+    <!-- Itineraries list -->
+    <div class="panel">
+      <h3>📋 Itinerarios <span id="itin-count" style="font-size:0.8rem;color:#718096;font-weight:400"></span></h3>
+      <div style="margin-bottom:10px">
+        <button class="btn-secondary btn-sm" onclick="loadItineraries()">🔄 Actualizar</button>
+      </div>
+      <div id="itinerary-list">
+        <div class="loader">Cargando…</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Travel Planner · Airport Service :8001 · Itinerary Service :8002 · Plotly JS ·
+  Arquitectura Hexagonal + Patrón Adapter
+</footer>
+
+<script src="js/map.js"></script>
+</body>
+</html>
