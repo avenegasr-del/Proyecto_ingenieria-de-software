@@ -38,9 +38,9 @@ AIRPORT_PORT    = 8001
 ITINERARY_PORT  = 8002
 FRONTEND_PORT   = 3000
 
-AIRPORT_URL     = f"http://localhost:{AIRPORT_PORT}"
-ITINERARY_URL   = f"http://localhost:{ITINERARY_PORT}"
-FRONTEND_URL    = f"http://localhost:{FRONTEND_PORT}"
+AIRPORT_URL     = f"http://127.0.0.1:{AIRPORT_PORT}"
+ITINERARY_URL   = f"http://127.0.0.1:{ITINERARY_PORT}"
+FRONTEND_URL    = f"http://127.0.0.1:{FRONTEND_PORT}"
 
 IS_WINDOWS      = platform.system() == "Windows"
 PYTHON          = sys.executable
@@ -95,7 +95,7 @@ def port_in_use(port: int) -> bool:
     import socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(1)
-        return s.connect_ex(("localhost", port)) == 0
+        return s.connect_ex(("127.0.0.1", port)) == 0
 
 
 def wait_for_service(url: str, name: str, timeout: int = 60) -> bool:
@@ -116,6 +116,22 @@ def wait_for_service(url: str, name: str, timeout: int = 60) -> bool:
         sys.stdout.flush()
     print()
     err(f"{name} did not start within {timeout}s")
+    return False
+
+
+def wait_for_port(port: int, name: str, timeout: int = 30) -> bool:
+    """Waits until the service binds to a TCP port."""
+    step(f"Waiting for {name} port {port} to bind…")
+    start = time.time()
+    while time.time() - start < timeout:
+        if port_in_use(port):
+            ok(f"{name} port {port} is bound")
+            return True
+        time.sleep(1)
+        sys.stdout.write(".")
+        sys.stdout.flush()
+    print()
+    err(f"{name} port {port} did not bind within {timeout}s")
     return False
 
 
@@ -161,8 +177,7 @@ def cmd_test(service: str = "all"):
         step(f"Running tests for {name}")
         env = {**os.environ, "PYTHONPATH": str(d)}
         result = subprocess.run(
-            [PYTHON, "-m", "pytest", "tests/", "-v", "--tb=short",
-             f"--cov=app", "--cov-report=term-missing"],
+            [PYTHON, "-m", "pytest", "tests/", "-v", "--tb=short"],
             cwd=str(d), env=env
         )
         results[name] = result.returncode == 0
@@ -234,7 +249,15 @@ def cmd_stop():
 
 def kill_port(port: int):
     if IS_WINDOWS:
-        subprocess.run(["netstat", "-ano"], capture_output=True)
+        result = subprocess.run(
+            ["netstat", "-ano"], capture_output=True, text=True
+        )
+        for line in result.stdout.splitlines():
+            if f":{port} " in line and "LISTENING" in line:
+                parts = [p for p in line.split() if p]
+                if parts:
+                    pid = parts[-1]
+                    subprocess.run(["taskkill", "/PID", pid, "/F"], capture_output=True, text=True)
     else:
         subprocess.run(f"lsof -ti:{port} | xargs kill -9 2>/dev/null || true",
                        shell=True, capture_output=True)
@@ -314,7 +337,7 @@ def cmd_local(open_tabs: bool = True):
         **os.environ,
         "PYTHONPATH": str(ITINERARY_DIR),
         "DATABASE_URL": f"sqlite:///{ITINERARY_DIR}/itineraries.db",
-        "AIRPORT_SERVICE_URL": f"http://localhost:{AIRPORT_PORT}",
+        "AIRPORT_SERVICE_URL": f"http://127.0.0.1:{AIRPORT_PORT}",
         "LOG_LEVEL": "INFO",
     }
 
@@ -342,7 +365,18 @@ def cmd_local(open_tabs: bool = True):
         cwd=str(ITINERARY_DIR), env=env_itinerary,
     )
     _processes.append(p2)
-    wait_for_service(ITINERARY_URL, "Itinerary Service", timeout=30)
+    if not wait_for_port(ITINERARY_PORT, "Itinerary Service", timeout=30):
+        if p2.poll() is not None:
+            err(f"Itinerary Service exited unexpectedly (code {p2.returncode})")
+        else:
+            err("Itinerary Service port did not bind within 30 seconds.")
+        err("Run: python run.py install")
+        cmd_stop()
+        sys.exit(1)
+
+    if not wait_for_service(ITINERARY_URL, "Itinerary Service", timeout=30):
+        warn("Itinerary Service port is bound, but health endpoint did not respond quickly.")
+        warn("Continuing startup; the service may become healthy shortly.")
 
     # Start Frontend with Python HTTP server
     step("Starting Frontend (Python HTTP server)…")
@@ -436,51 +470,53 @@ def main():
     _validate_project_structure()
 
     args = sys.argv[1:]
+    cmd = args[0].lower() if args else "menu"
 
     if args:
-        cmd = args[0].lower()
-        if cmd == "docker":     cmd_docker()
-        elif cmd == "local":    cmd_local()
-        elif cmd == "test":     cmd_test()
-        elif cmd == "stop":     cmd_stop()
-        elif cmd == "status":   cmd_status()
-        elif cmd == "install":  cmd_install()
-        elif cmd == "urls":     _print_urls()
+        if cmd == "docker":        cmd_docker(); return
+        elif cmd == "local":       cmd_local(); return
+        elif cmd == "test":        cmd_test(); return
+        elif cmd == "stop":        cmd_stop(); return
+        elif cmd == "status":      cmd_status(); return
+        elif cmd == "install":     cmd_install(); return
+        elif cmd == "urls":        _print_urls(); return
+        elif cmd in ("menu", "interactive"):
+            pass
         else:
             print(f"Unknown command: {cmd}")
-            print("Usage: python run.py [docker|local|test|stop|status|install]")
+            print("Usage: python run.py [docker|local|test|stop|status|install|menu]")
             sys.exit(1)
-        return
 
-    # Interactive menu
-    while True:
-        _print_menu()
-        try:
-            choice = input(_c(C.CYAN, "  Selecciona una opción (1-8): ")).strip()
-        except (KeyboardInterrupt, EOFError):
-            print()
-            ok("¡Hasta luego! ✈️")
-            sys.exit(0)
+    if cmd in ("menu", "interactive"):
+        # Interactive menu
+        while True:
+            _print_menu()
+            try:
+                choice = input(_c(C.CYAN, "  Selecciona una opción (1-8): ")).strip()
+            except (KeyboardInterrupt, EOFError):
+                print()
+                ok("¡Hasta luego! ✈️")
+                sys.exit(0)
 
-        if choice == "1":
-            cmd_docker()
-        elif choice == "2":
-            cmd_local()
-        elif choice == "3":
-            cmd_test()
-        elif choice == "4":
-            cmd_install()
-        elif choice == "5":
-            cmd_status()
-        elif choice == "6":
-            cmd_stop()
-        elif choice == "7":
-            _print_urls()
-        elif choice == "8":
-            ok("¡Hasta luego! ✈️")
-            sys.exit(0)
-        else:
-            warn("Opción inválida. Elige entre 1 y 8.")
+            if choice == "1":
+                cmd_docker()
+            elif choice == "2":
+                cmd_local()
+            elif choice == "3":
+                cmd_test()
+            elif choice == "4":
+                cmd_install()
+            elif choice == "5":
+                cmd_status()
+            elif choice == "6":
+                cmd_stop()
+            elif choice == "7":
+                _print_urls()
+            elif choice == "8":
+                ok("¡Hasta luego! ✈️")
+                sys.exit(0)
+            else:
+                warn("Opción inválida. Elige entre 1 y 8.")
 
 
 if __name__ == "__main__":

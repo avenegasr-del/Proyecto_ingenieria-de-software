@@ -1,107 +1,166 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Travel Planner — Sistema de Itinerarios</title>
-  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <title>AeroRoutes · Gestión de Itinerarios</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-
-<header>
-  <div>
-    <h1>✈️ Travel Planner</h1>
-    <p>Sistema de Planificación de Viajes — Arquitectura de Microservicios</p>
-  </div>
-  <span class="badge">Hexagonal Architecture</span>
-</header>
-
-<main>
-  <!-- Status bar -->
-  <div class="status-bar">
-    <span id="status-airport">
-      <span class="status-dot dot-grey"></span>
-      Airport Service: <span class="status-text">verificando…</span>
-    </span>
-    <span id="status-itinerary">
-      <span class="status-dot dot-grey"></span>
-      Itinerary Service: <span class="status-text">verificando…</span>
-    </span>
-    <span id="airport-count" style="color:#2e75b6;font-weight:600"></span>
-  </div>
-
-  <!-- Map -->
-  <div class="top-bar">
-    <h2>🗺️ Aeropuertos Colombianos</h2>
-    <div class="controls">
-      <button class="btn-secondary" onclick="renderMap()">🔄 Recargar mapa</button>
-    </div>
-  </div>
-
-  <div id="map-wrapper">
-    <div id="airport-map"></div>
-  </div>
-
-  <!-- Panels -->
-  <div class="panel-grid">
-
-    <!-- Create itinerary form -->
-    <div class="panel">
-      <h3>➕ Crear Itinerario</h3>
-      <form id="itinerary-form">
-        <div class="form-group">
-          <label>Nombre del viajero</label>
-          <input id="user-name" type="text" placeholder="Ej: María García" required>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AR</div>
+        <div>
+          <h1>AeroRoutes</h1>
+          <p>Gestión profesional de vuelos</p>
         </div>
-        <div class="form-group">
-          <label>Aeropuerto de salida</label>
-          <select id="dep-airport" required>
-            <option value="">Cargando aeropuertos…</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Aeropuerto de llegada</label>
-          <select id="arr-airport" required>
-            <option value="">Cargando aeropuertos…</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Fecha de viaje</label>
-            <input id="travel-date" type="date" required>
-          </div>
-          <div class="form-group">
-            <label>Duración (minutos)</label>
-            <input id="duration" type="number" min="1" placeholder="90" required>
-          </div>
-        </div>
-        <button type="submit" class="btn-primary" style="width:100%;margin-top:6px">
-          ✈️ Guardar Itinerario
-        </button>
-        <div id="form-message"></div>
-      </form>
-    </div>
-
-    <!-- Itineraries list -->
-    <div class="panel">
-      <h3>📋 Itinerarios <span id="itin-count" style="font-size:0.8rem;color:#718096;font-weight:400"></span></h3>
-      <div style="margin-bottom:10px">
-        <button class="btn-secondary btn-sm" onclick="loadItineraries()">🔄 Actualizar</button>
       </div>
-      <div id="itinerary-list">
-        <div class="loader">Cargando…</div>
+
+      <button id="theme-toggle" class="btn-ghost theme-toggle" type="button" onclick="toggleTheme()">Modo Light</button>
+
+      <div class="sidebar-summary">
+        <div class="metric-card">
+          <span>Aeropuertos</span>
+          <strong id="airport-count">—</strong>
+        </div>
+        <div class="metric-card">
+          <span>Itinerarios</span>
+          <strong id="itin-count">—</strong>
+        </div>
       </div>
-    </div>
 
+      <div class="sidebar-footer">
+        <p>Microservicios · Arquitectura hexagonal</p>
+        <small>Airport 8001 · Itinerary 8002</small>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="hero">
+        <div>
+          <span class="eyebrow">Vista aérea</span>
+          <h2>Visualiza la red de vuelos como una malla profesional.</h2>
+          <p>Un panel moderno para crear, explorar y seleccionar rutas con información de distancia y duración calculada automáticamente.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel map-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-tag">Mapa de red</p>
+              <h3>Conexiones y tráfico de vuelos</h3>
+            </div>
+            <button class="btn-ghost" onclick="renderMap()">Refrescar vista</button>
+          </div>
+          <div id="airport-map" class="map-view"></div>
+          <div class="map-meta-row">
+            <div class="map-footnote">Selecciona un itinerario para centrar el mapa y resaltar su ruta.</div>
+            <div class="traffic-summary">Avión activo + sombreado de tráfico por ruta.</div>
+          </div>
+          <div class="traffic-legend">
+            <div class="legend-item"><span class="legend-dot legend-low"></span>Ruta estándar</div>
+            <div class="legend-item"><span class="legend-dot legend-medium"></span>Tráfico medio</div>
+            <div class="legend-item"><span class="legend-dot legend-high"></span>Ruta frecuente</div>
+          </div>
+        </article>
+
+        <aside class="panel side-panel">
+          <div class="panel-group">
+            <div class="panel-header">
+              <div>
+                <p class="panel-tag">Estado</p>
+                <h3>Conexiones de servicios</h3>
+              </div>
+            </div>
+
+            <div class="service-status">
+              <div id="status-airport" class="service-item">
+                <div><span class="status-dot dot-grey"></span>Aeropuerto</div>
+                <strong><span class="status-text">verificando…</span></strong>
+              </div>
+              <div id="status-itinerary" class="service-item">
+                <div><span class="status-dot dot-grey"></span>Itinerarios</div>
+                <strong><span class="status-text">verificando…</span></strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-group">
+            <div class="panel-header">
+              <div>
+                <p class="panel-tag">Nuevo vuelo</p>
+                <h3>Registrar itinerario</h3>
+              </div>
+            </div>
+
+            <form id="itinerary-form" class="create-form">
+              <label class="field">
+                <span>Nombre del pasajero</span>
+                <input id="user-name" type="text" placeholder="Ej. Ana Pérez" required>
+              </label>
+
+              <label class="field">
+                <span>Origen</span>
+                <select id="dep-airport" required>
+                  <option value="">Cargando aeropuertos…</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Destino</span>
+                <select id="arr-airport" required>
+                  <option value="">Cargando aeropuertos…</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Fecha de salida</span>
+                <input id="travel-date" type="date" required>
+              </label>
+
+              <p class="field-note">La duración se calcula automáticamente con la distancia del trayecto.</p>
+              <button type="submit" class="btn-primary full-width">Guardar itinerario</button>
+              <div id="form-message" class="form-message"></div>
+            </form>
+          </div>
+
+          <div class="panel-group selected-route-panel">
+            <div class="panel-header">
+              <div>
+                <p class="panel-tag">Ruta activa</p>
+                <h3 id="selected-route-title">Ningún vuelo seleccionado</h3>
+              </div>
+            </div>
+            <div id="selected-route-content" class="selected-route-content">
+              <div class="route-row"><span>Ruta</span><strong id="selected-route-route">—</strong></div>
+              <div class="route-row"><span>Distancia</span><strong id="selected-route-distance">—</strong></div>
+              <div class="route-row"><span>Duración</span><strong id="selected-route-duration">—</strong></div>
+              <div class="route-row"><span>Pasajero</span><strong id="selected-route-user">—</strong></div>
+              <div class="route-row"><span>Fecha</span><strong id="selected-route-date">—</strong></div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="panel itinerary-panel">
+        <div class="panel-header">
+          <div>
+            <p class="panel-tag">Vuelos programados</p>
+            <h3>Lista de itinerarios</h3>
+          </div>
+          <button class="btn-ghost" onclick="loadItineraries()">Actualizar</button>
+        </div>
+        <div id="itinerary-list" class="itinerary-list">
+          <div class="loader">Cargando itinerarios…</div>
+        </div>
+      </section>
+    </main>
   </div>
-</main>
 
-<footer>
-  Travel Planner · Airport Service :8001 · Itinerary Service :8002 · Plotly JS ·
-  Arquitectura Hexagonal + Patrón Adapter
-</footer>
-
-<script src="js/map.js"></script>
+  <script src="js/map.js?v=3" defer></script>
 </body>
 </html>

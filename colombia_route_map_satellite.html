@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_04bfe8e83e5f41c9d9bd34c25d814daa {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_04bfe8e83e5f41c9d9bd34c25d814daa" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_04bfe8e83e5f41c9d9bd34c25d814daa = L.map(
+                "map_04bfe8e83e5f41c9d9bd34c25d814daa",
+                {
+                    center: [4.5, -74.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "maxBounds": [
+[
+-90,
+-180,
+],
+[
+90,
+180,
+],
+],
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": true,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_04bfe8e83e5f41c9d9bd34c25d814daa);
+
+            
+
+        
+    
+            var tile_layer_6207ea76a13d047f70e28a994bba08d7 = L.tileLayer(
+                "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 1,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri World Imagery",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_6207ea76a13d047f70e28a994bba08d7.addTo(map_04bfe8e83e5f41c9d9bd34c25d814daa);
+        
+    
+            map_04bfe8e83e5f41c9d9bd34c25d814daa.fitBounds(
+                [[-4.5, -82.5], [13.8, -66.2]],
+                {"padding": [20, 20]}
+            );
+        
+    
+            var rectangle_d234a793ec547edcecb38398045e15c1 = L.rectangle(
+                [[-4.5, -82.5], [13.8, -66.2]],
+                {"bubblingMouseEvents": true, "color": "#ffdd57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffdd57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_04bfe8e83e5f41c9d9bd34c25d814daa);
+        
+    
+            var circle_marker_960ebbf73214bccc497a49133f8e0cc0 = L.circleMarker(
+                [4.711, -74.0721],
+                {"bubblingMouseEvents": true, "color": "#00d084", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00d084", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(map_04bfe8e83e5f41c9d9bd34c25d814daa);
+        
+    
+        var popup_98384c97b3e9938284b47bc49b22fc19 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b31046cedaa20abdaa01c09b92937c2c = $(`<div id="html_b31046cedaa20abdaa01c09b92937c2c" style="width: 100.0%; height: 100.0%;"><strong>Aeropuerto El Dorado</strong><br>BOG</div>`)[0];
+                popup_98384c97b3e9938284b47bc49b22fc19.setContent(html_b31046cedaa20abdaa01c09b92937c2c);
+            
+        
+
+        circle_marker_960ebbf73214bccc497a49133f8e0cc0.bindPopup(popup_98384c97b3e9938284b47bc49b22fc19)
+        ;
+
+        
+    
+    
+            circle_marker_960ebbf73214bccc497a49133f8e0cc0.bindTooltip(
+                `<div>
+                     BOG
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_395e58d2f564402953081d61a3942824 = L.circleMarker(
+                [6.1647, -75.4231],
+                {"bubblingMouseEvents": true, "color": "#ff3b30", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ff3b30", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 3}
+            ).addTo(map_04bfe8e83e5f41c9d9bd34c25d814daa);
+        
+    
+        var popup_d6eedf2b6fb43de3e85ab452151e3551 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_968a44418966e9edcbe0584d8ffa2061 = $(`<div id="html_968a44418966e9edcbe0584d8ffa2061" style="width: 100.0%; height: 100.0%;"><strong>Aeropuerto José María Córdova</strong><br>MDE</div>`)[0];
+                popup_d6eedf2b6fb43de3e85ab452151e3551.setContent(html_968a44418966e9edcbe0584d8ffa2061);
+            
+        
+
+        circle_marker_395e58d2f564402953081d61a3942824.bindPopup(popup_d6eedf2b6fb43de3e85ab452151e3551)
+        ;
+
+        
+    
+    
+            circle_marker_395e58d2f564402953081d61a3942824.bindTooltip(
+                `<div>
+                     MDE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e15b2cd817ba6f987239597c9a6fb194 = L.polyline(
+                [[4.711, -74.0721], [4.722368157388352, -74.08263051788744], [4.733736155973353, -74.093161380977], [4.745103995365756, -74.10369259010996], [4.756471675176267, -74.1142241461277], [4.767839195015545, -74.12475604987164], [4.7792065544942055, -74.13528830218326], [4.790573753222815, -74.14582090390414], [4.801940790811898, -74.15635385587586], [4.813307666871932, -74.16688715894013], [4.82467438101335, -74.17742081393865], [4.836040932846535, -74.18795482171328], [4.8474073219818266, -74.19848918310585], [4.858773548029521, -74.2090238989583], [4.870139610599863, -74.21955897011263], [4.881505509303055, -74.23009439741091], [4.892871243749248, -74.24063018169525], [4.904236813548551, -74.25116632380787], [4.915602218311026, -74.26170282459098], [4.926967457646687, -74.27223968488696], [4.938332531165498, -74.28277690553814], [4.949697438477381, -74.293314487387], [4.961062179192208, -74.30385243127604], [4.972426752919805, -74.31439073804786], [4.98379115926995, -74.3249294085451], [4.995155397852371, -74.33546844361048], [5.006519468276752, -74.34600784408677], [5.017883370152729, -74.35654761081682], [5.029247103089889, -74.36708774464353], [5.040610666697771, -74.37762824640988], [5.051974060585863, -74.38816911695895], [5.0633372843636115, -74.39871035713381], [5.07470033764041, -74.40925196777766], [5.086063220025604, -74.41979394973373], [5.097425931128491, -74.43033630384532], [5.108788470558319, -74.44087903095587], [5.120150837924292, -74.45142213190876], [5.131513032835558, -74.46196560754754], [5.142875054901218, -74.47250945871579], [5.1542369037303315, -74.48305368625715], [5.1655985789318954, -74.49359829101533], [5.176960080114867, -74.50414327383415], [5.188321406888153, -74.51468863555743], [5.199682558860606, -74.52523437702912], [5.2110435356410365, -74.53578049909319], [5.2224043368381965, -74.54632700259371], [5.233764962060796, -74.55687388837482], [5.24512541091749, -74.56742115728072], [5.256485683016884, -74.57796881015564], [5.267845777967535, -74.58851684784396], [5.279205695377949, -74.59906527119009], [5.290565434856581, -74.60961408103846], [5.301924996011838, -74.62016327823365], [5.313284378452072, -74.63071286362027], [5.324643581785587, -74.64126283804302], [5.336002605620635, -74.65181320234664], [5.34736144956542, -74.66236395737596], [5.35872011322809, -74.67291510397588], [5.370078596216745, -74.68346664299136], [5.381436898139432, -74.69401857526746], [5.3927950186041524, -74.70457090164928], [5.404152957218846, -74.71512362298199], [5.415510713591408, -74.72567674011084], [5.42686828732968, -74.73623025388119], [5.438225678041452, -74.74678416513841], [5.44958288533446, -74.75733847472796], [5.460939908816394, -74.76789318349537], [5.472296748094882, -74.77844829228628], [5.48365340277751, -74.78900380194638], [5.495009872471802, -74.7995597133214], [5.506366156785237, -74.81011602725717], [5.51772225532524, -74.82067274459959], [5.5290781676991765, -74.83122986619466], [5.540433893514369, -74.8417873928884], [5.551789432378081, -74.85234532552693], [5.563144783897523, -74.86290366495648], [5.574499947679855, -74.87346241202324], [5.585854923332182, -74.88402156757363], [5.597209710461553, -74.89458113245404], [5.608564308674971, -74.90514110751091], [5.619918717579376, -74.91570149359084], [5.63127293678166, -74.9262622915405], [5.64262696588866, -74.93682350220654], [5.653980804507159, -74.94738512643576], [5.6653344522438855, -74.95794716507503], [5.676687908705515, -74.96850961897127], [5.688041173498665, -74.97907248897151], [5.699394246229903, -74.9896357759228], [5.71074712650574, -75.00019948067232], [5.722099813932631, -75.01076360406731], [5.73345230811698, -75.02132814695506], [5.74480460866513, -75.03189311018296], [5.756156715183375, -75.04245849459848], [5.767508627277951, -75.05302430104913], [5.77886034455504, -75.06359053038256], [5.790211866620767, -75.07415718344642], [5.801563193081203, -75.0847242610885], [5.812914323542364, -75.09529176415661], [5.8242652576102065, -75.10585969349872], [5.835615994890634, -75.11642804996276], [5.846966534989496, -75.12699683439685], [5.858316877512582, -75.13756604764912], [5.869667022065629, -75.14813569056778], [5.8810169682543165, -75.15870576400117], [5.892366715684264, -75.16927626879763], [5.90371626396104, -75.17984720580564], [5.915065612690151, -75.19041857587372], [5.926414761477055, -75.20099037985051], [5.937763709927144, -75.21156261858468], [5.949112457645759, -75.222135292925], [5.960461004238181, -75.23270840372032], [5.971809349309636, -75.24328195181955], [5.983157492465289, -75.25385593807174], [5.994505433310255, -75.26443036332593], [6.005853171449581, -75.27500522843128], [6.017200706488268, -75.28558053423707], [6.028548038031248, -75.2961562815926], [6.039895165683404, -75.30673247134726], [6.051242089049558, -75.31730910435054], [6.062588807734471, -75.327886181452], [6.073935321342848, -75.33846370350126], [6.08528162947934, -75.34904167134808], [6.096627731748533, -75.35962008584222], [6.107973627754957, -75.37019894783359], [6.119319317103085, -75.38077825817211], [6.130664799397328, -75.39135801770787], [6.142010074242042, -75.40193822729096], [6.153355141241521, -75.41251888777157], [6.1647, -75.4231]],
+                {"bubblingMouseEvents": true, "color": "#ffcc00", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffcc00", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.95, "smoothFactor": 1.0, "stroke": true, "weight": 8}
+            ).addTo(map_04bfe8e83e5f41c9d9bd34c25d814daa);
+        
+    
+        var popup_bd3ffaa4c100f15bee12ab5880454794 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3d0717920707a0dbfb8dbd68a60971d8 = $(`<div id="html_3d0717920707a0dbfb8dbd68a60971d8" style="width: 100.0%; height: 100.0%;">Ruta aérea: BOG → MDE</div>`)[0];
+                popup_bd3ffaa4c100f15bee12ab5880454794.setContent(html_3d0717920707a0dbfb8dbd68a60971d8);
+            
+        
+
+        poly_line_e15b2cd817ba6f987239597c9a6fb194.bindPopup(popup_bd3ffaa4c100f15bee12ab5880454794)
+        ;
+
+        
+    
+    
+            poly_line_e15b2cd817ba6f987239597c9a6fb194.bindTooltip(
+                `<div>
+                     Ruta BOG → MDE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>

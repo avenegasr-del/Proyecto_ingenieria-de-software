@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from unittest.mock import MagicMock
 
 from app.main import app
@@ -17,8 +18,12 @@ from app.application.services.itinerary_query_service import ItineraryQueryServi
 
 FUTURE = (date.today() + timedelta(days=7)).isoformat()
 
-# In-memory test database
-TEST_ENGINE = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+# In-memory test database using a shared SQLite pool so the schema stays available across sessions
+TEST_ENGINE = create_engine(
+    "sqlite:///:memory:",
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
 TestSession = sessionmaker(bind=TEST_ENGINE)
 
 def override_db():
