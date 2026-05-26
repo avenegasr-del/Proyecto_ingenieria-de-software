@@ -75,6 +75,7 @@ services:
     networks:
       - travel-net
     restart: unless-stopped
+# Actualización de control de hoy
 
   # ── SonarQube (optional, comment out if not needed) ────────────────────────
   sonarqube:
